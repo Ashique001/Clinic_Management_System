@@ -10,6 +10,8 @@ namespace Clininc_Management_System
         private System.Windows.Forms.Button btnAddPatient;
         private System.Windows.Forms.Button btnDeletePatient;
         private System.Windows.Forms.Button btnReviewDoctors;
+        private System.Windows.Forms.Button btnApproveDoctor;
+        private System.Windows.Forms.Button btnDeleteDoctor;
         private System.Windows.Forms.DataGridView gridData;
         private System.Windows.Forms.Label lblSectionTitle;
         private System.Windows.Forms.Label lblHint;
@@ -48,11 +50,12 @@ namespace Clininc_Management_System
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1100, 650);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.MaximizeBox = true;
             this.Name = "AdminDashboardForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Clinic Management System - Admin Dashboard";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             // 
             // panelNav
             // 
@@ -72,6 +75,8 @@ namespace Clininc_Management_System
             this.panelContent.Controls.Add(this.gridData);
             this.panelContent.Controls.Add(this.lblSectionTitle);
             this.panelContent.Controls.Add(this.lblHint);
+            this.panelContent.Controls.Add(this.btnApproveDoctor);
+            this.panelContent.Controls.Add(this.btnDeleteDoctor);
             // 
             // Buttons
             // 
@@ -129,6 +134,26 @@ namespace Clininc_Management_System
             this.gridData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridData.Size = new System.Drawing.Size(820, 520);
             this.gridData.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.gridData_CellDoubleClick);
+            // 
+            // btnApproveDoctor
+            // 
+            this.btnApproveDoctor.Text = "Approve Doctor";
+            this.btnApproveDoctor.BackColor = System.Drawing.Color.FromArgb(46, 204, 113);
+            this.btnApproveDoctor.ForeColor = System.Drawing.Color.White;
+            this.btnApproveDoctor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnApproveDoctor.Location = new System.Drawing.Point(800, 40);
+            this.btnApproveDoctor.Size = new System.Drawing.Size(130, 32);
+            this.btnApproveDoctor.Click += new System.EventHandler(this.btnApproveDoctor_Click);
+            // 
+            // btnDeleteDoctor
+            // 
+            this.btnDeleteDoctor.Text = "Delete Doctor";
+            this.btnDeleteDoctor.BackColor = System.Drawing.Color.FromArgb(231, 76, 60);
+            this.btnDeleteDoctor.ForeColor = System.Drawing.Color.White;
+            this.btnDeleteDoctor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteDoctor.Location = new System.Drawing.Point(940, 40);
+            this.btnDeleteDoctor.Size = new System.Drawing.Size(130, 32);
+            this.btnDeleteDoctor.Click += new System.EventHandler(this.btnDeleteDoctor_Click);
 
             // 
             // Add controls

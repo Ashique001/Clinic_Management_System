@@ -10,6 +10,7 @@ namespace Clininc_Management_System
     {
         private readonly DoctorAdminRepository _doctorAdminRepository;
         private readonly PatientRepository _patientRepository;
+        private bool _isReviewingDoctors;
 
         public AdminDashboardForm()
         {
@@ -23,6 +24,7 @@ namespace Clininc_Management_System
         {
             lblSectionTitle.Text = "Doctor List";
             lblHint.Text = "View all registered doctors.";
+            _isReviewingDoctors = false;
             BindGrid(_doctorAdminRepository.GetAllDoctors());
         }
 
@@ -30,6 +32,7 @@ namespace Clininc_Management_System
         {
             lblSectionTitle.Text = "Review Doctors";
             lblHint.Text = "Approve or delete pending doctor registrations.";
+            _isReviewingDoctors = true;
             BindGrid(_doctorAdminRepository.GetPendingDoctors());
         }
 
@@ -55,6 +58,80 @@ namespace Clininc_Management_System
             catch (Exception ex)
             {
                 MessageBox.Show("Could not load doctor list.\n" + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private Doctor GetSelectedDoctorOrShowMessage(string action)
+        {
+            if (gridData.CurrentRow == null)
+            {
+                MessageBox.Show("Please select a doctor row first.", action,
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+
+            if (!(gridData.CurrentRow.DataBoundItem is Doctor doctor))
+            {
+                MessageBox.Show("Current view is not the doctor list.", action,
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+
+            return doctor;
+        }
+
+        private void btnApproveDoctor_Click(object sender, EventArgs e)
+        {
+            var doctor = GetSelectedDoctorOrShowMessage("Approve Doctor");
+            if (doctor == null)
+                return;
+
+            if (!_isReviewingDoctors || !string.Equals(doctor.Status, "Pending", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Only pending doctors in the Review Doctors section can be approved.",
+                    "Approve Doctor", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                _doctorAdminRepository.ApproveDoctor(doctor.Id);
+                LoadPendingDoctors();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to approve doctor.\n" + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnDeleteDoctor_Click(object sender, EventArgs e)
+        {
+            var doctor = GetSelectedDoctorOrShowMessage("Delete Doctor");
+            if (doctor == null)
+                return;
+
+            var confirm = MessageBox.Show(
+                $"Are you sure you want to delete doctor '{doctor.FullName}'?",
+                "Delete Doctor",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (confirm != DialogResult.Yes)
+                return;
+
+            try
+            {
+                _doctorAdminRepository.DeleteDoctor(doctor.Id);
+                if (_isReviewingDoctors)
+                    LoadPendingDoctors();
+                else
+                    LoadDoctorList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed to delete doctor.\n" + ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
