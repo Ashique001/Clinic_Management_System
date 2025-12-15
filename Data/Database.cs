@@ -12,8 +12,9 @@ namespace Clininc_Management_System.Data
     public static class Database
     {
         // NOTE: We do NOT create or change the connection string here; we only read it.
+        // The name must match the existing connection string in App.config (ClinicDB).
         private static readonly string _connectionString =
-            ConfigurationManager.ConnectionStrings["ClinicDb"].ConnectionString;
+            ConfigurationManager.ConnectionStrings["ClinicDB"].ConnectionString;
 
         public static SqlConnection GetOpenConnection()
         {

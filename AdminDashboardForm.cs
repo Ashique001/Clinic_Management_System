@@ -40,7 +40,7 @@ namespace Clininc_Management_System
             BindGrid(_patientRepository.GetAllPatients());
         }
 
-        private void BindGrid<IListT>(IListT list)
+        private void BindGrid<T>(IList<T> list)
         {
             gridData.DataSource = null;
             gridData.DataSource = list;
