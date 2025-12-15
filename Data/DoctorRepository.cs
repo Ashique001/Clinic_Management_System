@@ -14,20 +14,31 @@ namespace Clininc_Management_System.Data
         /// Validates doctor login against the database.
         /// Only allows doctors with Status = 'Approved'.
         /// </summary>
-        public Doctor ValidateDoctorLogin(string doctorId, string password)
+        public Doctor ValidateDoctorLogin(string doctorCode, string password)
         {
-            if (string.IsNullOrWhiteSpace(doctorId) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(doctorCode) || string.IsNullOrWhiteSpace(password))
                 return null;
 
             try
             {
                 using (var connection = Database.GetOpenConnection())
                 using (var command = Database.CreateCommand(connection,
-                    "SELECT TOP 1 Id, DoctorId, FullName, Nid, ExperienceYears, Specialization, ContactNumber, Email, Password, Status " +
-                    "FROM Doctors WHERE DoctorId = @DoctorId AND Password = @Password AND Status = @Status"))
+                    "SELECT TOP 1 " +
+                    "DoctorId AS Id, " +
+                    "DoctorCode AS DoctorId, " +
+                    "FullName, " +
+                    "NID AS Nid, " +
+                    "Experience AS ExperienceYears, " +
+                    "Specialization, " +
+                    "Phone AS ContactNumber, " +
+                    "Email, " +
+                    "PasswordHash AS Password, " +
+                    "Status " +
+                    "FROM Doctors " +
+                    "WHERE DoctorCode = @DoctorCode AND PasswordHash = @PasswordHash AND Status = @Status"))
                 {
-                    command.Parameters.Add(new SqlParameter("@DoctorId", SqlDbType.NVarChar, 50) { Value = doctorId });
-                    command.Parameters.Add(new SqlParameter("@Password", SqlDbType.NVarChar, 255) { Value = password });
+                    command.Parameters.Add(new SqlParameter("@DoctorCode", SqlDbType.NVarChar, 50) { Value = doctorCode });
+                    command.Parameters.Add(new SqlParameter("@PasswordHash", SqlDbType.NVarChar, 255) { Value = password });
                     command.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar, 20) { Value = "Approved" });
 
                     using (var reader = command.ExecuteReader())

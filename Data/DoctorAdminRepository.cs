@@ -21,7 +21,18 @@ namespace Clininc_Management_System.Data
             var doctors = new List<Doctor>();
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "SELECT Id, DoctorId, FullName, Nid, ExperienceYears, Specialization, ContactNumber, Email, Password, Status FROM Doctors"))
+                       "SELECT " +
+                       "DoctorId AS Id, " +
+                       "DoctorCode AS DoctorId, " +
+                       "FullName, " +
+                       "NID AS Nid, " +
+                       "Experience AS ExperienceYears, " +
+                       "Specialization, " +
+                       "Phone AS ContactNumber, " +
+                       "Email, " +
+                       "PasswordHash AS Password, " +
+                       "Status " +
+                       "FROM Doctors"))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -37,7 +48,7 @@ namespace Clininc_Management_System.Data
         {
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "UPDATE Doctors SET Status = @Status WHERE Id = @Id"))
+                       "UPDATE Doctors SET Status = @Status WHERE DoctorId = @Id"))
             {
                 cmd.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar, 20) { Value = "Approved" });
                 cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
@@ -49,7 +60,7 @@ namespace Clininc_Management_System.Data
         {
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "DELETE FROM Doctors WHERE Id = @Id"))
+                       "DELETE FROM Doctors WHERE DoctorId = @Id"))
             {
                 cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
                 cmd.ExecuteNonQuery();
@@ -61,7 +72,18 @@ namespace Clininc_Management_System.Data
             var doctors = new List<Doctor>();
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "SELECT Id, DoctorId, FullName, Nid, ExperienceYears, Specialization, ContactNumber, Email, Password, Status FROM Doctors WHERE Status = @Status"))
+                       "SELECT " +
+                       "DoctorId AS Id, " +
+                       "DoctorCode AS DoctorId, " +
+                       "FullName, " +
+                       "NID AS Nid, " +
+                       "Experience AS ExperienceYears, " +
+                       "Specialization, " +
+                       "Phone AS ContactNumber, " +
+                       "Email, " +
+                       "PasswordHash AS Password, " +
+                       "Status " +
+                       "FROM Doctors WHERE Status = @Status"))
             {
                 cmd.Parameters.Add(new SqlParameter("@Status", SqlDbType.NVarChar, 20) { Value = status });
 

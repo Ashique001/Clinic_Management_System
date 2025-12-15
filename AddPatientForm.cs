@@ -18,11 +18,10 @@ namespace Clininc_Management_System
             lblMessage.Text = string.Empty;
 
             if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
-                string.IsNullOrWhiteSpace(txtPatientId.Text) ||
                 string.IsNullOrWhiteSpace(txtContact.Text) ||
                 string.IsNullOrWhiteSpace(txtAge.Text))
             {
-                lblMessage.Text = "Full Name, Patient ID, Contact, and Age are required.";
+                lblMessage.Text = "Full Name, Contact, and Age are required.";
                 return;
             }
 
@@ -35,7 +34,6 @@ namespace Clininc_Management_System
             Patient = new Patient
             {
                 FullName = txtFullName.Text.Trim(),
-                PatientId = txtPatientId.Text.Trim(),
                 ContactNumber = txtContact.Text.Trim(),
                 Address = txtAddress.Text.Trim(),
                 Gender = cmbGender.SelectedItem as string,

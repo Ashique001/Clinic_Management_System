@@ -16,7 +16,7 @@ namespace Clininc_Management_System.Data
             var patients = new List<Patient>();
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "SELECT Id, FullName, PatientId, ContactNumber, Address, Gender, Age FROM Patients"))
+                       "SELECT PatientId, FullName, Age, Gender, Phone, Address FROM Patients"))
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
@@ -32,15 +32,14 @@ namespace Clininc_Management_System.Data
         {
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "INSERT INTO Patients (FullName, PatientId, ContactNumber, Address, Gender, Age) " +
-                       "VALUES (@FullName, @PatientId, @ContactNumber, @Address, @Gender, @Age)"))
+                       "INSERT INTO Patients (FullName, Age, Gender, Phone, Address) " +
+                       "VALUES (@FullName, @Age, @Gender, @Phone, @Address)"))
             {
                 cmd.Parameters.Add(new SqlParameter("@FullName", SqlDbType.NVarChar, 150) { Value = patient.FullName });
-                cmd.Parameters.Add(new SqlParameter("@PatientId", SqlDbType.NVarChar, 50) { Value = patient.PatientId });
-                cmd.Parameters.Add(new SqlParameter("@ContactNumber", SqlDbType.NVarChar, 30) { Value = patient.ContactNumber });
-                cmd.Parameters.Add(new SqlParameter("@Address", SqlDbType.NVarChar, 200) { Value = (object)patient.Address ?? DBNull.Value });
-                cmd.Parameters.Add(new SqlParameter("@Gender", SqlDbType.NVarChar, 20) { Value = (object)patient.Gender ?? DBNull.Value });
                 cmd.Parameters.Add(new SqlParameter("@Age", SqlDbType.Int) { Value = patient.Age });
+                cmd.Parameters.Add(new SqlParameter("@Gender", SqlDbType.NVarChar, 10) { Value = (object)patient.Gender ?? DBNull.Value });
+                cmd.Parameters.Add(new SqlParameter("@Phone", SqlDbType.NVarChar, 20) { Value = (object)patient.ContactNumber ?? DBNull.Value });
+                cmd.Parameters.Add(new SqlParameter("@Address", SqlDbType.NVarChar, 255) { Value = (object)patient.Address ?? DBNull.Value });
 
                 cmd.ExecuteNonQuery();
             }
@@ -50,7 +49,7 @@ namespace Clininc_Management_System.Data
         {
             using (var connection = Database.GetOpenConnection())
             using (var cmd = Database.CreateCommand(connection,
-                       "DELETE FROM Patients WHERE Id = @Id"))
+                       "DELETE FROM Patients WHERE PatientId = @Id"))
             {
                 cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
                 cmd.ExecuteNonQuery();
@@ -61,10 +60,11 @@ namespace Clininc_Management_System.Data
         {
             return new Patient
             {
-                Id = record["Id"] is DBNull ? 0 : Convert.ToInt32(record["Id"]),
+                Id = record["PatientId"] is DBNull ? 0 : Convert.ToInt32(record["PatientId"]),
                 FullName = record["FullName"] as string,
-                PatientId = record["PatientId"] as string,
-                ContactNumber = record["ContactNumber"] as string,
+                // We don't have a separate string ID column; reuse the numeric ID as a string if needed.
+                PatientId = record["PatientId"].ToString(),
+                ContactNumber = record["Phone"] as string,
                 Address = record["Address"] as string,
                 Gender = record["Gender"] as string,
                 Age = record["Age"] is DBNull ? 0 : Convert.ToInt32(record["Age"])

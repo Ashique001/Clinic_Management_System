@@ -10,7 +10,7 @@ namespace Clininc_Management_System.Data
     public class DoctorRegistrationRepository
     {
         public void RegisterDoctor(
-            string doctorId,
+            string doctorCode,
             string fullName,
             string nid,
             int experienceYears,
@@ -21,10 +21,10 @@ namespace Clininc_Management_System.Data
         {
             using (var connection = Database.GetOpenConnection())
             using (var command = Database.CreateCommand(connection,
-                "INSERT INTO Doctors (DoctorId, FullName, Nid, ExperienceYears, Specialization, ContactNumber, Email, Password, Status) " +
-                "VALUES (@DoctorId, @FullName, @Nid, @ExperienceYears, @Specialization, @ContactNumber, @Email, @Password, @Status)"))
+                "INSERT INTO Doctors (DoctorCode, FullName, NID, Experience, Specialization, Phone, Email, PasswordHash, Status) " +
+                "VALUES (@DoctorCode, @FullName, @Nid, @ExperienceYears, @Specialization, @ContactNumber, @Email, @Password, @Status)"))
             {
-                command.Parameters.Add(new SqlParameter("@DoctorId", SqlDbType.NVarChar, 50) { Value = doctorId });
+                command.Parameters.Add(new SqlParameter("@DoctorCode", SqlDbType.NVarChar, 50) { Value = doctorCode });
                 command.Parameters.Add(new SqlParameter("@FullName", SqlDbType.NVarChar, 150) { Value = fullName });
                 command.Parameters.Add(new SqlParameter("@Nid", SqlDbType.NVarChar, 50) { Value = nid });
                 command.Parameters.Add(new SqlParameter("@ExperienceYears", SqlDbType.Int) { Value = experienceYears });
